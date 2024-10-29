@@ -1,4 +1,4 @@
-import flatpickr from 'flatpickr';
+import flatpickr from 'flatpickr'; 
 import iziToast from 'izitoast';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'izitoast/dist/css/iziToast.min.css';
@@ -20,6 +20,7 @@ function convertMs(ms) {
 const buttonEl = document.querySelector('[data-start]');
 buttonEl.setAttribute('disabled', '');
 let userSelectedDate;
+let intervalID; 
 
 flatpickr('#datetime-picker', {
   enableTime: true,
@@ -52,15 +53,16 @@ function updateTimerDisplay(timeLeft) {
   const minutesEl = document.querySelector('[data-minutes]');
   const secondsEl = document.querySelector('[data-seconds]');
 
-  daysEl.textContent = days;
+  daysEl.textContent = addLeadingZero(days); 
   hoursEl.textContent = addLeadingZero(hours);
   minutesEl.textContent = addLeadingZero(minutes);
   secondsEl.textContent = addLeadingZero(seconds);
 }
 
-let intervalID;
 function onClickStartTimer() {
   const input = document.querySelector('#datetime-picker');
+
+  if (intervalID) clearInterval(intervalID);
 
   intervalID = setInterval(() => {
     const currentTime = Date.now();
@@ -70,10 +72,10 @@ function onClickStartTimer() {
       updateTimerDisplay(timeLeft);
       buttonEl.setAttribute('disabled', '');
       input.setAttribute('disabled', '');
-    } else if (timeLeft <= 0) {
+    } else {
       clearInterval(intervalID);
       input.removeAttribute('disabled');
-      buttonEl.removeAttribute('disabled');
+      buttonEl.removeAttribute('disabled'); 
     }
   }, 1000);
 }
